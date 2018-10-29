@@ -4,6 +4,9 @@ CREATE TABLE Aluno (
 	dt_nasc DATE,
 	nivel INT,
 	PRIMARY KEY (matricula)
+	--  FOREIGN KEY (matricula) REFERENCES professor(matricula)
+	--  FOREIGN KEY (matricula) REFERENCES 
+
 );
 
 CREATE TABLE Professor (
@@ -24,7 +27,7 @@ CREATE TABLE Departamento (
 
 CREATE TABLE LinhaPesquisa (
 	codLinhaPesquisa INT NOT NULL,
-	subCnpq INT,
+	subCnpq INT NOT NULL,
 	nomeArea VARCHAR(10),
 	nomeSubArea VARCHAR(10),
 	PRIMARY KEY (codLinhaPesquisa),
@@ -37,6 +40,12 @@ CREATE TABLE Laboratorio (
 	nome VARCHAR(15),
 	local VARCHAR(20),
 	PRIMARY KEY (codLaboratorio)
+);
+
+CREATE TABLE Recurso  (
+	codigo INT NOT NULL,
+	descricao VARCHAR(40),
+	PRIMARY KEY (codigo)
 );
 
 CREATE TABLE Projeto (
