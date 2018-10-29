@@ -1,5 +1,5 @@
 CREATE TABLE Aluno (
-	matricula INT NOT NULL,
+	matricula INT,
 	nome VARCHAR(20),
 	dt_nasc DATE,
 	nivel INT,
@@ -10,7 +10,7 @@ CREATE TABLE Aluno (
 );
 
 CREATE TABLE Professor (
-	matricula INT NOT NULL,
+	matricula INT,
 	nome VARCHAR(20),
 	dt_nasc DATE,
 	titulacao VARCHAR(10),
@@ -18,7 +18,7 @@ CREATE TABLE Professor (
 );
 
 CREATE TABLE Departamento (
-	codDepartamento INT NOT NULL,
+	codDepartamento INT,
 	endereco VARCHAR(30),
 	nome VARCHAR(15),
 	telefone INT, --atributo multivalorado
@@ -26,30 +26,29 @@ CREATE TABLE Departamento (
 );
 
 CREATE TABLE LinhaPesquisa (
-	codLinhaPesquisa INT NOT NULL,
+	codLinhaPesquisa INT,
 	subCnpq INT NOT NULL,
 	nomeArea VARCHAR(10),
 	nomeSubArea VARCHAR(10),
-	PRIMARY KEY (codLinhaPesquisa),
-	PRIMARY KEY (subCnpq)
+	PRIMARY KEY (codLinhaPesquisa, subCnpq)
 );
 
 CREATE TABLE Laboratorio (
 	-- recurso: entidade fraca
-	codLaboratorio INT NOT NULL,
+	codLaboratorio INT,
 	nome VARCHAR(15),
 	local VARCHAR(20),
 	PRIMARY KEY (codLaboratorio)
 );
 
 CREATE TABLE Recurso  (
-	codigo INT NOT NULL,
+	codRecurso INT,
 	descricao VARCHAR(40),
-	PRIMARY KEY (codigo)
+	PRIMARY KEY (codRecurso)
 );
 
 CREATE TABLE Projeto (
-	codProjeto INT NOT NULL,
+	codProjeto INT,
 	orcamento NUMERIC(7,2),
 	titulo VARCHAR(15),
 	descricao VARCHAR(30),
@@ -59,7 +58,7 @@ CREATE TABLE Projeto (
 );
 
 CREATE TABLE AgenciaFinanciadora (
-	codAgencia INT NOT NULL,
+	codAgencia INT,
 	nome VARCHAR(15),
 	email VARCHAR(30),
 	telefone INT, --atributo multivalorado
@@ -68,7 +67,7 @@ CREATE TABLE AgenciaFinanciadora (
 );
 
 CREATE TABLE Publicacao (
-	codPublicacao INT NOT NULL,
+	codPublicacao INT,
 	titulo VARCHAR(20) NOT NULL,
 	veiculo VARCHAR(10),
 	ano INT,
@@ -76,7 +75,7 @@ CREATE TABLE Publicacao (
 );
 
 CREATE TABLE Patente (
-	codPatente INT NOT NULL,
+	codPatente INT,
 	numreg INT,
 	descricao varchar(20),
 	PRIMARY KEY (codPatente)
