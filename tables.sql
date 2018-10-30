@@ -1,14 +1,3 @@
-CREATE TABLE Aluno (
-	matricula INT,
-	nome VARCHAR(20),
-	dt_nasc DATE,
-	nivel INT,
-	PRIMARY KEY (matricula)
-	--  FOREIGN KEY (matricula) REFERENCES professor(matricula)
-	--  FOREIGN KEY (matricula) REFERENCES 
-
-);
-
 CREATE TABLE Professor (
 	matricula INT,
 	nome VARCHAR(20),
@@ -16,6 +5,16 @@ CREATE TABLE Professor (
 	titulacao VARCHAR(10),
 	PRIMARY KEY (matricula)
 );
+
+CREATE TABLE Aluno (
+	matricula INT,
+	nome VARCHAR(20),
+	dt_nasc DATE,
+	nivel INT,
+	PRIMARY KEY (matricula),
+	FOREIGN KEY (matricula) REFERENCES professor(matricula)
+);
+
 
 CREATE TABLE Departamento (
 	codDepartamento INT,
@@ -25,6 +24,10 @@ CREATE TABLE Departamento (
 	PRIMARY KEY (codDepartamento) 
 );
 
+CREATE TABLE TelefoneDepartamento (
+	
+
+);
 CREATE TABLE LinhaPesquisa (
 	codLinhaPesquisa INT,
 	subCnpq INT NOT NULL,
@@ -44,7 +47,8 @@ CREATE TABLE Laboratorio (
 CREATE TABLE Recurso  (
 	codRecurso INT,
 	descricao VARCHAR(40),
-	PRIMARY KEY (codRecurso)
+    foreign key (codLaboratorio) references Laboratorio(codLaboratorio),
+	PRIMARY KEY (codRecurso,codLaboratorio)
 );
 
 CREATE TABLE Projeto (
@@ -66,6 +70,13 @@ CREATE TABLE AgenciaFinanciadora (
 	PRIMARY KEY (codAgencia)
 );
 
+-- olhar
+CREATE TABLE TelefoneAgencia(
+	codigo char(9),
+	telefone char(11),
+	foreign key(codigo) references Agencia_Financiadora,
+	primary key(codigo,telefone)
+);
 CREATE TABLE Publicacao (
 	codPublicacao INT,
 	titulo VARCHAR(20) NOT NULL,
