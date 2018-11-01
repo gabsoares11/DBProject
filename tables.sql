@@ -1,95 +1,149 @@
-CREATE DATABASE ProjetosDePesquisa;
 
-CREATE TABLE Professor (
+CREATE TABLE Professor (	--
 	matricula INT,
 	nome VARCHAR(20),
 	dt_nasc DATE,
 	titulacao VARCHAR(10),
-	PRIMARY KEY (matricula)
+	codigo INT,
+	codlab INT,
+	PRIMARY KEY (matricula), 
+	FOREIGN KEY (martricula),
+	FOREIGN KEY (codigo) REFERENCES Departamento(codigo),
+	FOREIGN KEY (codlab) REFERENCES Laboratorio(codlab)
+	
 );
 
-CREATE TABLE Aluno (
+CREATE TABLE Aluno (	--
 	matricula INT,
-	nome VARCHAR(20),
+	nome VARCHAR(30) NOT NULL,
 	dt_nasc DATE,
 	nivel INT,
+	matricula_pf INT,
+	cod_prod INT,
+	cod_lnpq INT,
+	sod_cnpq INT,
+	codigo_agencia INT,
+	valor NUMBER,
+	dt_inicio DATE,
+	dt_fim DATE,
+	horas INT,
 	PRIMARY KEY (matricula),
-	FOREIGN KEY (matricula) REFERENCES professor(matricula)
+	FOREIGN KEY (matricula_pf) REFERENCES Professor(matricula),	
+	FOREIGN KEY (cod_prod) REFERENCES Projeto(cod_prod),
+	FOREIGN KEY (cod_lnpq, sub_cnpq) REFERENCES LinhaPesquisa(cod_lnpq, sub_cnpq),
+	FOREIGN KEY (codigo_agencia) REFERENCES AgenciaFinanciadora(codigo)
 );
 
 
-CREATE TABLE Departamento (
+CREATE TABLE Departamento (	--
 	codDepartamento INT,
 	endereco VARCHAR(30),
 	nome VARCHAR(15),
-	telefone INT, --atributo multivalorado
+	--telefone INT, --atributo multivalorado
 	PRIMARY KEY (codDepartamento) 
 );
 
-CREATE TABLE TelefoneDepartamento (
-	
-
-);
-CREATE TABLE LinhaPesquisa (
+CREATE TABLE LinhaPesquisa (	--
 	codLinhaPesquisa INT,
-	subCnpq INT NOT NULL,
-	nomeArea VARCHAR(10),
+	subCnpq INT,
+	nomeArea VARCHAR(10) NOT NULL,
 	nomeSubArea VARCHAR(10),
 	PRIMARY KEY (codLinhaPesquisa, subCnpq)
 );
 
-CREATE TABLE Laboratorio (
-	-- recurso: entidade fraca
+CREATE TABLE Laboratorio ( --
 	codLaboratorio INT,
-	nome VARCHAR(15),
-	local VARCHAR(20),
+	nome VARCHAR(25),
+	local VARCHAR(30),
 	PRIMARY KEY (codLaboratorio)
 );
 
-CREATE TABLE Recurso  (
+	-- ENTIDADE FRACA
+CREATE TABLE Recurso  (	--
 	codRecurso INT,
-	descricao VARCHAR(40),
-    foreign key (codLaboratorio) references Laboratorio(codLaboratorio),
-	PRIMARY KEY (codRecurso,codLaboratorio)
+	descricao VARCHAR(100),
+	codLaboratorio INT,
+	PRIMARY KEY (codRecurso,codLaboratorio),
+	FOREIGN KEY (codLaboratorio) references Laboratorio(codLaboratorio),
 );
 
-CREATE TABLE Projeto (
+CREATE TABLE Projeto (		--
 	codProjeto INT,
-	orcamento NUMERIC(7,2),
-	titulo VARCHAR(15),
-	descricao VARCHAR(30),
-	dt_inicio DATE,
-	dt_fim DATE,
-	PRIMARY KEY (codProjeto)
+	orcamento NUMBER,
+	titulo VARCHAR(25),
+	descricao VARCHAR(100),
+	dt_inicio DATE NOT NULL,
+	dt_fim DATE NOT NULL,
+	matricula_ INT,
+	PRIMARY KEY (codProjeto),
+	FOREIGN KEY (matricula_) REFERENCES Professor(matricula)
 );
 
-CREATE TABLE AgenciaFinanciadora (
+CREATE TABLE AgenciaFinanciadora (	--
 	codAgencia INT,
-	nome VARCHAR(15),
+	nome VARCHAR(15) NOT NULL,
 	email VARCHAR(30),
-	telefone INT, --atributo multivalorado
+	-- telefone INT, --atributo multivalorado
 	endereco VARCHAR(30),
 	PRIMARY KEY (codAgencia)
 );
 
--- olhar
-CREATE TABLE TelefoneAgencia(
-	codigo char(9),
-	telefone char(11),
-	foreign key(codigo) references Agencia_Financiadora,
-	primary key(codigo,telefone)
-);
 CREATE TABLE Publicacao (
 	codPublicacao INT,
-	titulo VARCHAR(20) NOT NULL,
-	veiculo VARCHAR(10),
-	ano DATEs,
-	PRIMARY KEY (codPublicacao)
+	titulo VARCHAR(30) NOT NULL,
+	veiculo VARCHAR(20),
+	ano INT,
+	matricula_ INT,
+	codprod INT,
+	PRIMARY KEY (codPublicacao),
+	FOREIGN KEY (matricula_) REFERENCES Professor(matricula),
+	FOREIGN KEY (codprod) REFERENCES Projeto(codprod)
 );
 
-CREATE TABLE Patente (
+CREATE TABLE Patente (		--
 	codPatente INT,
 	numreg INT,
-	descricao varchar(20),
-	PRIMARY KEY (codPatente)
+	descricao varchar(100),
+	codprod INT,
+	PRIMARY KEY (codPatente),
+	FOREIGN KEY (codprod) REFERENCES Projeto(codprod)
 );	
+
+ 
+CREATE TABLE TelefoneAgencia(	--
+	codigo INT, 
+	telefone VARCHAR(20),
+	PRIMARY KEY (telefone, codigo),
+	FOREIGN KEY (codigo) REFERENCES AgenciaFinanciadora(codigo)
+	
+);
+
+
+CREATE TABLE TelefoneDepartamento (	--
+	telefone VARCHAR(20),
+	codigo INT,
+	PRIMARY KEY (telefone, codigo),
+	FOREIGN KEY (codigo) REFERENCES Departamento(codigo)
+);
+
+-- RELACIONAMENTOS N PARA N
+
+CREATE TABLE financia ();	--Entre Agencia e Projeto
+
+CREATE TABLE executa ();	-- Entre Laboratorio e Projeto
+
+CREATE TABLE linhaPesquisa_contem ();	-- Entre Linha de Pesquisa e Professor
+
+CREATE TABLE esta_em ();	-- Entre Linha de Pesquisa e Projeto
+
+CREATE TABLE ProfessorParticipa ();	-- Entre Professor e Projeto
+
+CREATE TABLE AlunoParticipa ();	-- Entre Aluno e Publicacao
+
+
+
+
+
+
+
+
