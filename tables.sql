@@ -1,3 +1,5 @@
+CREATE DATABASE ProjetosDePesquisa;
+
 CREATE TABLE Professor (
 	matricula INT,
 	nome VARCHAR(20),
@@ -81,7 +83,7 @@ CREATE TABLE Publicacao (
 	codPublicacao INT,
 	titulo VARCHAR(20) NOT NULL,
 	veiculo VARCHAR(10),
-	ano INT,
+	ano DATEs,
 	PRIMARY KEY (codPublicacao)
 );
 
