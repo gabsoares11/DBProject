@@ -1,21 +1,29 @@
-drop TABLE Aluno;
+DROP TABLE Professor;
 
-drop TABLE Professor;
+DROP TABLE Aluno;
 
-drop TABLE Departamento;
+DROP TABLE Departamento;
 
-drop TABLE TelefoneDepartamento;
+DROP TABLE LinhaPesquisa;
 
-drop TABLE LinhaPesquisa;
+DROP TABLE Laboratorio;
 
-drop TABLE Laboratorio;
+DROP TABLE Recurso;
 
-drop TABLE Recurso;
+DROP TABLE Projeto;
 
-drop TABLE Projeto;
+DROP TABLE AgenciaFinanciadora;
 
-drop TABLE AgenciaFinanciadora;
+DROP TABLE Publicacao;
 
-drop TABLE Publicacao;
+DROP TABLE Patente;	
 
-drop TABLE Patente;	
+DROP TABLE TelefoneAgencia;
+DROP TABLE TelefoneDepartamento;
+DROP TABLE financia;
+DROP TABLE executa;
+DROP TABLE linhaPesquisa_contem;
+DROP TABLE esta_em;
+DROP TABLE ProfessorParticipa;
+DROP TABLE AlunoParticipa;
+
