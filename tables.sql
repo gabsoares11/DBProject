@@ -1,3 +1,19 @@
+CREATE DATABASE ProjetoDePesquisa;
+
+CREATE TABLE Departamento (	
+	codDepartamento INT,
+	endereco VARCHAR(30),
+	nome VARCHAR(15),
+	PRIMARY KEY (codDepartamento) 
+);
+
+CREATE TABLE Laboratorio ( 
+	codLaboratorio INT,
+	nome VARCHAR(25),
+	local VARCHAR(30),
+	PRIMARY KEY (codLaboratorio)
+);
+
 
 CREATE TABLE Professor (	
 	matricula INT,
@@ -12,33 +28,8 @@ CREATE TABLE Professor (
 	FOREIGN KEY (codlab) REFERENCES Laboratorio(codlab)
 );
 
-CREATE TABLE Aluno (	
-	matricula INT,
-	nome VARCHAR(30) NOT NULL,
-	dt_nasc DATE,
-	nivel INT,
-	matricula_pf INT,
-	cod_prod INT,
-	cod_lnpq INT,
-	sod_cnpq INT,
-	codigo_agencia INT,
-	valor NUMBER,
-	dt_inicio DATE,
-	dt_fim DATE,
-	horas INT,
-	PRIMARY KEY (matricula),
-	FOREIGN KEY (matricula_pf) REFERENCES Professor(matricula),	
-	FOREIGN KEY (cod_prod) REFERENCES Projeto(cod_prod),
-	FOREIGN KEY (cod_lnpq, sub_cnpq) REFERENCES LinhaPesquisa(cod_lnpq, sub_cnpq),
-	FOREIGN KEY (codigo_agencia) REFERENCES AgenciaFinanciadora(codigo)
-);
 
-CREATE TABLE Departamento (	
-	codDepartamento INT,
-	endereco VARCHAR(30),
-	nome VARCHAR(15),
-	PRIMARY KEY (codDepartamento) 
-);
+
 
 CREATE TABLE LinhaPesquisa (	
 	codLinhaPesquisa INT,
@@ -48,12 +39,6 @@ CREATE TABLE LinhaPesquisa (
 	PRIMARY KEY (codLinhaPesquisa, subCnpq)
 );
 
-CREATE TABLE Laboratorio ( 
-	codLaboratorio INT,
-	nome VARCHAR(25),
-	local VARCHAR(30),
-	PRIMARY KEY (codLaboratorio)
-);
 
 	-- ENTIDADE FRACA
 CREATE TABLE Recurso  (	
@@ -61,7 +46,7 @@ CREATE TABLE Recurso  (
 	descricao VARCHAR(100),
 	codLaboratorio INT,
 	PRIMARY KEY (codRecurso,codLaboratorio),
-	FOREIGN KEY (codLaboratorio) references Laboratorio(codLaboratorio),
+	FOREIGN KEY (codLaboratorio) references Laboratorio(codLaboratorio)
 );
 
 CREATE TABLE Projeto (		
@@ -83,6 +68,27 @@ CREATE TABLE AgenciaFinanciadora (
 	-- telefone INT, --atributo multivalorado
 	endereco VARCHAR(30),
 	PRIMARY KEY (codAgencia)
+);
+
+CREATE TABLE Aluno (	
+	matricula INT,
+	nome VARCHAR(30) NOT NULL,
+	dt_nasc DATE,
+	nivel INT,
+	matricula_pf INT,
+	cod_prod INT,
+	cod_lnpq INT,
+	sod_cnpq INT,
+	codigo_agencia INT,
+	valor NUMBER,
+	dt_inicio DATE,
+	dt_fim DATE,
+	horas INT,
+	PRIMARY KEY (matricula),
+	FOREIGN KEY (matricula_pf) REFERENCES Professor(matricula),	
+	FOREIGN KEY (cod_prod) REFERENCES Projeto(cod_prod),
+	FOREIGN KEY (cod_lnpq, sub_cnpq) REFERENCES LinhaPesquisa(cod_lnpq, sub_cnpq),
+	FOREIGN KEY (codigo_agencia) REFERENCES AgenciaFinanciadora(codigo)
 );
 
 CREATE TABLE Publicacao (
