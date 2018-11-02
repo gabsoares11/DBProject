@@ -65,7 +65,6 @@ CREATE TABLE AgenciaFinanciadora (
 	codAgencia INT,
 	nome VARCHAR(15) NOT NULL,
 	email VARCHAR(30),
-	-- telefone INT, --atributo multivalorado
 	endereco VARCHAR(30),
 	PRIMARY KEY (codAgencia)
 );
