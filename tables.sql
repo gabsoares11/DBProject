@@ -23,7 +23,6 @@ CREATE TABLE Professor (
 	codigo INT,
 	codlab INT,
 	PRIMARY KEY (matricula), 
-	FOREIGN KEY (martricula),
 	FOREIGN KEY (codigo) REFERENCES Departamento(codigo),
 	FOREIGN KEY (codlab) REFERENCES Laboratorio(codlab)
 );
