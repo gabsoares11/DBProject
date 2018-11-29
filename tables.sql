@@ -1,202 +1,269 @@
-CREATE DATABASE ProjetoDePesquisa;
 
-CREATE TABLE Departamento (	
-	codDepartamento INT,
-	endereco VARCHAR(30),
-	nome VARCHAR(15),
-	PRIMARY KEY (codDepartamento) 
+-- Esquema padrao para o projeto de Banco de Dados 1 2018.2
+
+CREATE TABLE professor (
+	matricula        INT         PRIMARY KEY,
+	nome             VARCHAR(100) NOT NULL,
+	titulacao        VARCHAR(20),
+    cod_departamento INT,
+	dt_nasc          DATE
 );
 
-CREATE TABLE Laboratorio ( 
-	codLaboratorio INT,
-	nome VARCHAR(25),
-	local VARCHAR(30),
-	PRIMARY KEY (codLaboratorio)
+CREATE TABLE aluno (
+    matricula       INT         PRIMARY KEY,
+    nome            VARCHAR(100) NOT NULL,
+    nivel           VARCHAR(150),
+    mat_professor   INT,
+    cod_projeto     INT,
+    cod_cnpq        INT,
+    cod_sub_cnpq    INT,
+    dt_nasc         DATE,
+    cod_agencia     INT,
+    valor_bolsa     INT,
+    dt_inicio       DATE,
+    dt_fim          DATE,
+    horas           INT,
+
+
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula)
 );
 
+CREATE TABLE projeto (
+    codigo          INT         PRIMARY KEY,
+    mat_professor   INT         NOT NULL,
+    orcamento       NUMERIC(10, 2),
+    titulo          VARCHAR(100),
+    descricao       VARCHAR(100),
+    dt_inicio       DATE,
+    dt_fim          DATE,
+    premiacao       INT DEFAULT 0 NOT NULL,
 
-CREATE TABLE Professor (	
-	matricula INT,
-	nome VARCHAR(20),
-	dt_nasc DATE,
-	titulacao VARCHAR(10),
-	codigo INT,
-	codlab INT,
-	PRIMARY KEY (matricula), 
-	FOREIGN KEY (martricula),
-	FOREIGN KEY (codigo) REFERENCES Departamento(codigo),
-	FOREIGN KEY (codlab) REFERENCES Laboratorio(codlab)
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula)
 );
 
+CREATE TABLE departamento (
+    codigo        INT          PRIMARY KEY,
+    nome          VARCHAR(100) NOT NULL,
+    endereco      VARCHAR(200) NOT NULL,
+    mat_professor INT,
 
 
-
-CREATE TABLE LinhaPesquisa (	
-	codLinhaPesquisa INT,
-	subCnpq INT,
-	nomeArea VARCHAR(10) NOT NULL,
-	nomeSubArea VARCHAR(10),
-	PRIMARY KEY (codLinhaPesquisa, subCnpq)
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula)
 );
 
+CREATE TABLE laboratorio (
+	codigo  INT          PRIMARY KEY,
+	nome    VARCHAR(100) NOT NULL,
+	local   VARCHAR(200),
+    mat_professor INT,
 
-	-- ENTIDADE FRACA
-CREATE TABLE Recurso  (	
-	codRecurso INT,
-	descricao VARCHAR(100),
-	codLaboratorio INT,
-	PRIMARY KEY (codRecurso,codLaboratorio),
-	FOREIGN KEY (codLaboratorio) references Laboratorio(codLaboratorio)
+
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula)
 );
 
-CREATE TABLE Projeto (		
-	codProjeto INT,
-	orcamento NUMBER,
-	titulo VARCHAR(25),
-	descricao VARCHAR(100),
-	dt_inicio DATE NOT NULL,
-	dt_fim DATE NOT NULL,
-	matricula_ INT,
-	PRIMARY KEY (codProjeto),
-	FOREIGN KEY (matricula_) REFERENCES Professor(matricula)
-);
+CREATE TABLE recurso (
+	codigo      INT,
+	cod_recurso INT,
+	descricao   VARCHAR(300),
 
-CREATE TABLE AgenciaFinanciadora (	
-	codAgencia INT,
-	nome VARCHAR(15) NOT NULL,
-	email VARCHAR(30),
-	endereco VARCHAR(30),
-	PRIMARY KEY (codAgencia)
-);
-
-CREATE TABLE Aluno (	
-	matricula INT,
-	nome VARCHAR(30) NOT NULL,
-	dt_nasc DATE,
-	nivel INT,
-	matricula_pf INT,
-	cod_prod INT,
-	cod_lnpq INT,
-	sod_cnpq INT,
-	codigo_agencia INT,
-	valor NUMBER,
-	dt_inicio DATE,
-	dt_fim DATE,
-	horas INT,
-	PRIMARY KEY (matricula),
-	FOREIGN KEY (matricula_pf) REFERENCES Professor(matricula),	
-	FOREIGN KEY (cod_prod) REFERENCES Projeto(cod_prod),
-	FOREIGN KEY (cod_lnpq, sub_cnpq) REFERENCES LinhaPesquisa(cod_lnpq, sub_cnpq),
-	FOREIGN KEY (codigo_agencia) REFERENCES AgenciaFinanciadora(codigo)
-);
-
-CREATE TABLE Publicacao (
-	codPublicacao INT,
-	titulo VARCHAR(30) NOT NULL,
-	veiculo VARCHAR(20),
-	ano INT,
-	matricula_ INT,
-	codprod INT,
-	PRIMARY KEY (codPublicacao),
-	FOREIGN KEY (matricula_) REFERENCES Professor(matricula),
-	FOREIGN KEY (codprod) REFERENCES Projeto(codprod)
-);
-
-CREATE TABLE Patente (		
-	codPatente INT,
-	numreg INT,
-	descricao varchar(100),
-	codprod INT,
-	PRIMARY KEY (codPatente),
-	FOREIGN KEY (codprod) REFERENCES Projeto(codprod)
-);	
-
-CREATE TABLE TelefoneAgencia(	
-	codigo INT, 
-	telefone VARCHAR(20),
-	PRIMARY KEY (telefone, codigo),
-	FOREIGN KEY (codigo) REFERENCES AgenciaFinanciadora(codigo)
-);
-
-CREATE TABLE TelefoneDepartamento (
-	telefone VARCHAR(20),
-	codigo INT,
-	PRIMARY KEY (telefone, codigo),
-	FOREIGN KEY (codigo) REFERENCES Departamento(codigo)
-);
-
--- RELACIONAMENTOS N PARA N
-
-CREATE TABLE financia (
+	PRIMARY KEY (codigo, cod_recurso),
 	
-	codigoAgencia INT,
-	codProd INT,
-	PRIMARY KEY (codigoAgencia, codProd),
-	FOREIGN KEY (codigoAgencia) REFERENCES AgenciaFinanciadora(codigoAgencia),
-	FOREIGN KEY (codProd) REFERENCES Projeto(codProd)
-);	--Entre Agencia e Projeto
+ 
+    FOREIGN KEY (cod_recurso) 
+    REFERENCES  laboratorio(codigo) 
+    ON DELETE   CASCADE
+);
 
-CREATE TABLE executa (
-	codLab INT,
-	codProd INT,
-	PRIMARY KEY (codLab, codProd),
-	FOREIGN KEY (codLab) REFERENCES Laboratorio(codLab),
-	FOREIGN KEY (codProd) REFERENCES Projeto(codProd)
-);	-- Entre Laboratorio e Projeto
+CREATE TABLE linha_de_pesquisa (
+    cod_cnpq            INT,
+    cod_sub_cnpq        INT,
+    nome_area           VARCHAR(100)   NOT NULL,
+    nome_subarea        VARCHAR(100),
+    
+    PRIMARY KEY (cod_cnpq,cod_sub_cnpq)
+);
 
-CREATE TABLE linhaPesquisa_contem (
-	codLnpq INT,
-	subCnpq INT,
-	matricula INT,
-	PRIMARY KEY (codLnpq, subCnpq, matricula),
-	FOREIGN KEY (codLnpq, subCnpq) REFERENCES LinhaPesquisa(codLnpq, subCnpq),
-	FOREIGN KEY (matricula) REFERENCES Professor(matricula)
-);	-- Entre Linha de Pesquisa e Professor
+CREATE TABLE patente (
+    codigo      INT         PRIMARY KEY,
+    num_reg     INT         UNIQUE  NOT NULL,
+    descricao   VARCHAR(300),
+    cod_projeto INT,
+    
 
-CREATE TABLE esta_em (
-	codLnpq INT,
-	subCnpq INT,
-	codProd INT,
-	PRIMARY KEY (codLnpq, subCnpq, codProd),
-	FOREIGN KEY (codLnpq, subCnpq) REFERENCES LinhaPesquisa(codLnpq, subCnpq),
-	FOREIGN KEY (codProd) REFERENCES Projeto(codProd)
-);	-- Entre Linha de Pesquisa e Projeto
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo)
+);
 
-CREATE TABLE ProfessorParticipa (
-	matricula INT,
-	codProd INT,
-	PRIMARY KEY (matricula, codProd),
-	FOREIGN KEY (matricula) REFERENCES Professor(matricula),
-	FOREIGN KEY (codProd) REFERENCES Projeto(codProd)
-);	-- Entre Professor e Projeto
+CREATE TABLE publicacao (
+    codigo          INT          PRIMARY KEY,
+    titulo          VARCHAR(200) NOT NULL,
+    veiculo         VARCHAR(100),
+    ano             INT,
+    cod_projeto     INT,
+    mat_professor   INT,
+    
 
-CREATE TABLE AlunoParticipa (
-	matricula INT,
-	codigo INT,
-	PRIMARY KEY (matricula, codigo),
-	FOREIGN KEY (matricula) REFERENCES Aluno(matricula),
-	FOREIGN KEY (codigo) REFERENCES Publicacao(codigo)
-);	-- Entre Aluno e Publicacao
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo),
 
 
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula)
+);
+
+CREATE TABLE agencia_financiadora (
+	codigo      INT             PRIMARY KEY, 
+	nome        VARCHAR(200)    NOT NULL,
+	email       VARCHAR(40)     NOT NULL,
+	endereco    VARCHAR(200)
+);
 
 
-DROP TABLE Professor;
-DROP TABLE Aluno;
-DROP TABLE Departamento;
-DROP TABLE LinhaPesquisa;
-DROP TABLE Laboratorio;
-DROP TABLE Recurso;
-DROP TABLE Projeto;
-DROP TABLE AgenciaFinanciadora;
-DROP TABLE Publicacao;
-DROP TABLE Patente;	
 
-DROP TABLE TelefoneAgencia;
-DROP TABLE TelefoneDepartamento;
-DROP TABLE financia;
-DROP TABLE executa;
-DROP TABLE linhaPesquisa_contem;
-DROP TABLE esta_em;
-DROP TABLE ProfessorParticipa;
-DROP TABLE AlunoParticipa;
+-- Tabelas que compoem os relacionamentos do modelo
+-- Criacao de tabelas para os relacionamentos N:N
+
+CREATE TABLE pesquisa_projeto (
+    cod_cnpq        INT,
+    cod_sub_cnpq    INT, 
+    cod_projeto     INT,
+    
+    PRIMARY KEY (cod_cnpq, cod_sub_cnpq, cod_projeto),
+    
+
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo),
+
+
+    FOREIGN KEY (cod_cnpq, cod_sub_cnpq) 
+    REFERENCES  linha_de_pesquisa(cod_cnpq, cod_sub_cnpq)
+);
+
+CREATE TABLE professor_pesquisa (
+    mat_professor   INT,
+    cod_cnpq        INT,
+    cod_sub_cnpq    INT,  
+
+    PRIMARY KEY (mat_professor, cod_cnpq, cod_sub_cnpq),
+
+
+    FOREIGN KEY (mat_professor) 
+    REFERENCES professor(matricula),
+
+
+    FOREIGN KEY (cod_cnpq, cod_sub_cnpq) 
+    REFERENCES  linha_de_pesquisa(cod_cnpq, cod_sub_cnpq)
+);
+
+CREATE TABLE professor_projeto (
+    mat_professor    INT,
+    cod_projeto      INT,
+  
+    PRIMARY KEY (mat_professor, cod_projeto),
+    
+
+    FOREIGN KEY (mat_professor) 
+    REFERENCES  professor(matricula),
+
+
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo)
+);
+
+CREATE TABLE laboratorio_projeto (
+    cod_laboratorio     INT,
+    cod_projeto         INT,
+
+    PRIMARY KEY (cod_laboratorio,cod_projeto),
+
+
+    FOREIGN KEY (cod_laboratorio) 
+    REFERENCES  laboratorio(codigo),
+
+
+    FOREIGN KEY (cod_projeto)
+    REFERENCES  projeto(codigo)
+);
+
+CREATE TABLE aluno_publicacao (
+    mat_aluno       INT,
+    cod_publicacao  INT,
+
+    PRIMARY KEY (mat_aluno,cod_publicacao),
+    
+
+    FOREIGN KEY (mat_aluno) 
+    REFERENCES  aluno(matricula),
+
+
+    FOREIGN KEY (cod_publicacao) 
+    REFERENCES  publicacao(codigo)
+);
+
+CREATE TABLE agencia_projeto (
+    cod_agencia     INT,
+    cod_projeto     INT,
+
+    PRIMARY KEY (cod_agencia,cod_projeto), 
+
+
+    FOREIGN KEY (cod_agencia) 
+    REFERENCES  agencia_financiadora(codigo),
+
+
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo)
+);
+
+-- Colecoes que compoem o modelo
+-- Tabela de telefones
+
+CREATE TABLE agencia_telefone (
+    cod_agencia     INT,
+    telefone        VARCHAR(15),
+    
+    PRIMARY KEY (cod_agencia,telefone),
+
+
+    FOREIGN KEY (cod_agencia) 
+    REFERENCES  agencia_financiadora(codigo)
+);
+
+
+CREATE TABLE departamento_telefone (
+    cod_departamento    INT,
+    telefone            VARCHAR(15),
+    
+    PRIMARY KEY (cod_departamento,telefone),
+
+
+    FOREIGN KEY (cod_departamento) 
+    REFERENCES  departamento(codigo)
+);
+
+-- Constraints que compoem o modelo
+-- Adicao de chaves estrangeiras
+
+ALTER TABLE professor 
+    ADD CONSTRAINT fk_possui_cod_dep
+    FOREIGN KEY (cod_departamento) 
+    REFERENCES  departamento(codigo);
+
+ALTER TABLE aluno 
+    ADD CONSTRAINT fk_part_cod_proj
+    FOREIGN KEY (cod_projeto) 
+    REFERENCES  projeto(codigo);
+
+ALTER TABLE aluno 
+    ADD CONSTRAINT fk_bolsa_cod_age
+    FOREIGN KEY (cod_agencia) 
+    REFERENCES  agencia_financiadora(codigo);
+
+ALTER TABLE aluno 
+    ADD CONSTRAINT fk_tem_lp
+    FOREIGN KEY (cod_cnpq,cod_sub_cnpq) 
+    REFERENCES  linha_de_pesquisa(cod_cnpq,cod_sub_cnpq);
