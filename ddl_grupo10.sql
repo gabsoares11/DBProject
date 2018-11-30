@@ -1,12 +1,11 @@
-
 -- Esquema padrao para o projeto de Banco de Dados 1 2018.2
 
 CREATE TABLE professor (
-	matricula        INT         PRIMARY KEY,
-	nome             VARCHAR(100) NOT NULL,
-	titulacao        VARCHAR(20),
+    matricula        INT         PRIMARY KEY,
+    nome             VARCHAR(100) NOT NULL,
+    titulacao        VARCHAR(20),
     cod_departamento INT,
-	dt_nasc          DATE
+    dt_nasc          DATE
 );
 
 CREATE TABLE aluno (
@@ -55,9 +54,9 @@ CREATE TABLE departamento (
 );
 
 CREATE TABLE laboratorio (
-	codigo  INT          PRIMARY KEY,
-	nome    VARCHAR(100) NOT NULL,
-	local   VARCHAR(200),
+    codigo  INT          PRIMARY KEY,
+    nome    VARCHAR(100) NOT NULL,
+    local   VARCHAR(200),
     mat_professor INT,
 
 
@@ -66,12 +65,12 @@ CREATE TABLE laboratorio (
 );
 
 CREATE TABLE recurso (
-	codigo      INT,
-	cod_recurso INT,
-	descricao   VARCHAR(300),
+    codigo      INT,
+    cod_recurso INT,
+    descricao   VARCHAR(300),
 
-	PRIMARY KEY (codigo, cod_recurso),
-	
+    PRIMARY KEY (codigo, cod_recurso),
+    
  
     FOREIGN KEY (cod_recurso) 
     REFERENCES  laboratorio(codigo) 
@@ -84,7 +83,7 @@ CREATE TABLE linha_de_pesquisa (
     nome_area           VARCHAR(100)   NOT NULL,
     nome_subarea        VARCHAR(100),
     
-    PRIMARY KEY (cod_cnpq,cod_sub_cnpq)
+    PRIMARY KEY (cod_cnpq, cod_sub_cnpq)
 );
 
 CREATE TABLE patente (
@@ -116,10 +115,10 @@ CREATE TABLE publicacao (
 );
 
 CREATE TABLE agencia_financiadora (
-	codigo      INT             PRIMARY KEY, 
-	nome        VARCHAR(200)    NOT NULL,
-	email       VARCHAR(40)     NOT NULL,
-	endereco    VARCHAR(200)
+    codigo      INT             PRIMARY KEY, 
+    nome        VARCHAR(200)    NOT NULL,
+    email       VARCHAR(40)     NOT NULL,
+    endereco    VARCHAR(200)
 );
 
 
@@ -178,7 +177,7 @@ CREATE TABLE laboratorio_projeto (
     cod_laboratorio     INT,
     cod_projeto         INT,
 
-    PRIMARY KEY (cod_laboratorio,cod_projeto),
+    PRIMARY KEY (cod_laboratorio, cod_projeto),
 
 
     FOREIGN KEY (cod_laboratorio) 
@@ -193,7 +192,7 @@ CREATE TABLE aluno_publicacao (
     mat_aluno       INT,
     cod_publicacao  INT,
 
-    PRIMARY KEY (mat_aluno,cod_publicacao),
+    PRIMARY KEY (mat_aluno, cod_publicacao),
     
 
     FOREIGN KEY (mat_aluno) 
@@ -226,7 +225,7 @@ CREATE TABLE agencia_telefone (
     cod_agencia     INT,
     telefone        VARCHAR(15),
     
-    PRIMARY KEY (cod_agencia,telefone),
+    PRIMARY KEY (cod_agencia, telefone),
 
 
     FOREIGN KEY (cod_agencia) 
@@ -238,7 +237,7 @@ CREATE TABLE departamento_telefone (
     cod_departamento    INT,
     telefone            VARCHAR(15),
     
-    PRIMARY KEY (cod_departamento,telefone),
+    PRIMARY KEY (cod_departamento, telefone),
 
 
     FOREIGN KEY (cod_departamento) 
@@ -266,4 +265,4 @@ ALTER TABLE aluno
 ALTER TABLE aluno 
     ADD CONSTRAINT fk_tem_lp
     FOREIGN KEY (cod_cnpq,cod_sub_cnpq) 
-    REFERENCES  linha_de_pesquisa(cod_cnpq,cod_sub_cnpq);
+    REFERENCES  linha_de_pesquisa(cod_cnpq, cod_sub_cnpq);

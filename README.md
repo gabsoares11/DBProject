@@ -1,4 +1,4 @@
-Banco de Dados 1
+<h1>Banco de Dados 1</h1>
 
 
 Projeto da disciplina de Banco de Dados 1 da Universidade Federal de Campina Grande (UFCG)
@@ -6,9 +6,12 @@ Projeto da disciplina de Banco de Dados 1 da Universidade Federal de Campina Gra
 
 Integrantes: 
 
-Gabryelle Soares Herculano de Almeida
+<a href="https://github.com/gabsoares11">Gabryelle Soares Herculano de Almeida</a>
 
-Larissa Gabriela Amorim da Costa
+<a href="https://github.com/larissaamorim">Larissa Gabriela Amorim da Costa</a>
 
-Yally de Lima Galdino
+<a href="https://github.com/yallydlgaldino">Yally de Lima Galdino</a>
 
+
+<h3>Modelo Relacional</h3>
+<a href="https://github.com/gabsoares11/DBProject/blob/master/modelo_relacional.png"><img src="modelo_relacional.png"/></a>
