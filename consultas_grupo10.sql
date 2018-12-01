@@ -3,12 +3,10 @@
 
 --OBS: 
 -- OK - 1,2,3,4,5,7,11,13,14,15
---falta-6,8,9,10,12,16
---- questao nao sei - 6,9,10,16
---- questao 8 incompleta
---- duvida da 12 mas ta feita
-
-
+-- OK - 6
+--AJEITAR - 8,16
+--DÚVIDA (se ta certa) - 12 mas ta feita
+--falta-9,10
 
 
 
@@ -40,7 +38,7 @@ WHERE LOWER(A.nivel) LIKE '%doutorado%' AND
 CREATE VIEW Laboratorios AS
   SELECT L.*
   FROM laboratorio L, projeto P, laboratorio_projeto LP
-  WHERE P.dt_inicio >= TO_DATE('2008-01-01','YYYY/MM/DD')
+  WHERE P.dt_inicio >= TO_DATE('2008-01-01','YYYY/MM/DD') AND
         LP.cod_projeto = P.codigo AND
         LP.cod_laboratorio = L.codigo
 
@@ -72,27 +70,24 @@ WHERE dt_inicio < TO_DATE('2014-01-01','YYYY/MM/DD') AND
 
 
 
-
-
-
 -- Questão 6
 -- Quais professores que participaram de todas as publicações?
-SELECT 
-FROM 
-GROUP BY 
-HAVING COUNT(*) >= ALL
-                (SELECT COUNT(*)
-                 FROM 
-                 GROUP BY )
-
-
-
+SELECT PR.nome	
+ FROM publicacao PU, professor PR
+ GROUP BY PR.nome
+ HAVING COUNT(*) >= ALL		 
+                 (SELECT COUNT(*)		               
+                  FROM publicacao PU, professor PR		                 
+                  WHERE PU.mat_professor = PR.matricula )		                
+		
+		
+		
 
 -- Questão 7
 -- Quais agências financiadoras que financiam bolsas menores que R$2000 para alunos de mestrado?
 SELECT AG.*
 FROM agencia_financiadora AG, aluno AL
-WHERE LOWER(AG.nivel) LIKE '%mestrado%' AND 
+WHERE LOWER(AL.nivel) LIKE '%mestrado%' AND 
       AL.cod_agencia = AG.codigo AND
       AL.valor_bolsa < 2000
 
@@ -188,3 +183,15 @@ END;
 
 -- Questão 16
 -- Crie um trigger que não permita a atualização da descrição de uma patente
+CREATE or REPLACE TRIGGER not_update		
+ BEFORE INSERT OR UPDATE		
+ 	ON PETENTE		
+ 	FOR EACH ROW		
+   WHEN(descricao)		
+ DECLARE		
+ BEGIN		
+   IF :new.dt_inicio > :new.dt_fim		
+      Then		
+        RAISE_APPLICATION_ERROR(-20001,'DT_INICIO INVALIDO');		
+   END IF;		
+ END;  
