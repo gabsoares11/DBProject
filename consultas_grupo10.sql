@@ -9,21 +9,18 @@
 --falta-9,10
 
 
-
+-- OK
 -- Questão 1
--- Crie uma view que lista as agências inanciadoras que financiaram projetos que iniciaram entre 2007 e 2015
+-- Crie uma view que lista as agências financiadoras que financiaram projetos que iniciaram entre 2007 e 2015
 CREATE VIEW Agencias AS
-  SELECT A.*
-  FROM agencia_financiadora A, projeto P, agencia_projeto AP
-  WHERE P.dt_inicio < TO_DATE('2016-01-01', 'YYYY/MM/DD') AND
-        P.dt_inicio >= TO_DATE('2007-01-01', 'YYYY/MM/DD') AND
-        AP.cod_agencia = A.codigo AND
-        AP.cod_projeto = P.codigo
+  SELECT DISTINCT AF.nome
+  FROM agencia_financiadora AF, agencia_projeto AP, projeto P
+  WHERE AP.cod_agencia = AF.codigo AND AP.cod_projeto = P.codigo AND P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';
 
 
 
 -- Questão 2
---Liste a quantidade de alunos de doutorado que possuem bolsa, por Linha de Pesquisa
+-- Liste a quantidade de alunos de doutorado que possuem bolsa, por Linha de Pesquisa
 SELECT COUNT(*)
 FROM aluno A
 WHERE LOWER(A.nivel) LIKE '%doutorado%' AND 
@@ -195,3 +192,8 @@ CREATE or REPLACE TRIGGER not_update
         RAISE_APPLICATION_ERROR(-20001,'DT_INICIO INVALIDO');		
    END IF;		
  END;  
+
+
+SELECT AF.nome
+FROM agencia_financiadora AF, agencia_projeto AP, projeto P
+WHERE AP.cod_agencia = AF.codigo AND AP.cod_projeto = P.codigo AND P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';

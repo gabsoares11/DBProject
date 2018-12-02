@@ -1,10 +1,10 @@
 <h1>Banco de Dados 1</h1>
 
 
-Projeto da disciplina de Banco de Dados 1 da Universidade Federal de Campina Grande (UFCG)
+Projeto de Banco de Dados da Universidade Federal de Campina Grande (UFCG)
 
 
-Integrantes: 
+<h3>Integrantes:</h3> 
 
 <a href="https://github.com/gabsoares11">Gabryelle Soares Herculano de Almeida</a>
 
