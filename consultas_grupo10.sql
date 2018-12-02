@@ -13,31 +13,32 @@
 -- Questão 1
 -- Crie uma view que lista as agências financiadoras que financiaram projetos que iniciaram entre 2007 e 2015
 CREATE VIEW Agencias AS
-  SELECT DISTINCT AF.nome
+  SELECT DISTINCT AF.*
   FROM agencia_financiadora AF, agencia_projeto AP, projeto P
-  WHERE AP.cod_agencia = AF.codigo AND AP.cod_projeto = P.codigo AND P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';
+  WHERE AP.cod_agencia = AF.codigo AND 
+        AP.cod_projeto = P.codigo AND 
+        P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';
 
 
-
+-- dúvida
 -- Questão 2
 -- Liste a quantidade de alunos de doutorado que possuem bolsa, por Linha de Pesquisa
 SELECT COUNT(*)
 FROM aluno A
 WHERE LOWER(A.nivel) LIKE '%doutorado%' AND 
       A.cod_cnpq IS NOT NULL AND 
-      A.cod_sub_cnpq IS NOT NULL 
+      A.cod_sub_cnpq IS NOT NULL ;
 
 
-
-
+-- OK
 -- Questão 3
 -- Crie uma view que lista os laboratórios que executam projetos iniciados em 2008
 CREATE VIEW Laboratorios AS
   SELECT L.*
-  FROM laboratorio L, projeto P, laboratorio_projeto LP
-  WHERE P.dt_inicio >= TO_DATE('2008-01-01','YYYY/MM/DD') AND
+  FROM laboratorio_projeto LP, laboratorio L, projeto P
+  WHERE P.dt_inicio BETWEEN '01-01-2008' AND '12-31-2008' AND
         LP.cod_projeto = P.codigo AND
-        LP.cod_laboratorio = L.codigo
+        LP.cod_laboratorio = L.codigo;
 
 
 
