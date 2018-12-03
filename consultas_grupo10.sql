@@ -1,12 +1,15 @@
 -- Banco de Dados I - Projeto parte 3 
 -- Consultas SQL 
+-- GRUPO: Gabryelle Soares
+--        Larissa Gabriela
+--        Yally Galdino
 
---OBS: 
--- OK - 1,2,3,4,5,7,11,13,14,15
--- OK - 6
---AJEITAR - 8,16
---DÚVIDA (se ta certa) - 12 mas ta feita
---falta-9,10
+ 
+-- ok - 1, 3, 4, 5, 6, 7, 14
+-- dúvida - 2 (listar por linha de pesquisa)
+--          8 (orienta mais de um)
+-- falta fzr - 9, 10
+-- falta testar - 11, 12, 13, 15, 16
 
 
 -- OK
@@ -24,10 +27,11 @@ CREATE VIEW Agencias AS
 -- Questão 2
 -- Liste a quantidade de alunos de doutorado que possuem bolsa, por Linha de Pesquisa
 SELECT COUNT(*)
-FROM aluno A
-WHERE LOWER(A.nivel) LIKE '%doutorado%' AND 
-      A.cod_cnpq IS NOT NULL AND 
-      A.cod_sub_cnpq IS NOT NULL ;
+FROM aluno
+WHERE LOWER(nivel) LIKE '%doutorado%' AND 
+      cod_cnpq IS NOT NULL AND 
+      cod_sub_cnpq IS NOT NULL AND 
+      valor_bolsa > 1;
 
 
 -- OK
@@ -41,124 +45,118 @@ CREATE VIEW Laboratorios AS
         LP.cod_laboratorio = L.codigo;
 
 
-
---Questão 4
+-- OK
+-- Questão 4
 -- Quais os alunos que de doutorado nasceram entre 1975 e 1990 e participaram de alguma publicação em 2014?
 SELECT A.nome
-FROM aluno A, publicacao P, aluno_publicacao AP
-WHERE LOWER(A.nivel) LIKE '%doutorado%' AND 
-      AP.mat_aluno = A.matricula AND
-      AP.cod_publicacao = P.codigo AND
-      A.dt_nasc >= TO_DATE('1975-01-01','YYYY/MM/DD') AND 
-      A.dt_nasc <  TO_DATE('1991-01-01','YYYY/MM/DD') AND
-      P.ano = 2014
+FROM aluno_publicacao AP, aluno A, publicacao P
+WHERE A.dt_nasc BETWEEN '01-01-1975' AND '12-31-1990' AND 
+      LOWER(A.nivel) LIKE '%doutorado%' AND 
+      A.matricula = AP.mat_aluno AND 
+      P.codigo = AP.cod_publicacao AND 
+      P.ano = 2014;
 
 
-
-
-
+-- OK
 -- Questão 5
 -- Quais os projetos que iniciaram antes de 2014 e possuem um orçamento entre R$ 550.000 e R$ 780.000?
-SELECT codigo
-FROM projeto 
-WHERE dt_inicio < TO_DATE('2014-01-01','YYYY/MM/DD') AND
-      orcamento >= 550000.00 AND
-      orcamento <= 780000.00
+SELECT codigo, descricao
+FROM projeto
+WHERE dt_inicio < '01-01-2014' AND 
+      orcamento BETWEEN '550000.00' AND '780000.00';
 
 
-
-
+-- OK
 -- Questão 6
 -- Quais professores que participaram de todas as publicações?
-SELECT PR.nome	
- FROM publicacao PU, professor PR
- GROUP BY PR.nome
- HAVING COUNT(*) >= ALL		 
-                 (SELECT COUNT(*)		               
-                  FROM publicacao PU, professor PR		                 
-                  WHERE PU.mat_professor = PR.matricula )		                
-		
-		
+SELECT PR.nome
+FROM professor PR, publicacao PU
+WHERE PR.matricula = PU.mat_professor
+GROUP BY PR.nome
+HAVING COUNT(*) >= ALL (SELECT COUNT(*)                  
+                  FROM publicacao PU, professor PR                     
+                  WHERE PU.mat_professor = PR.matricula);		
 		
 
+-- OK
 -- Questão 7
 -- Quais agências financiadoras que financiam bolsas menores que R$2000 para alunos de mestrado?
-SELECT AG.*
-FROM agencia_financiadora AG, aluno AL
-WHERE LOWER(AL.nivel) LIKE '%mestrado%' AND 
-      AL.cod_agencia = AG.codigo AND
-      AL.valor_bolsa < 2000
+SELECT AF.*
+FROM agencia_financiadora AF, aluno A
+WHERE LOWER(A.nivel) LIKE '%mestrado%' AND 
+      A.cod_agencia = AF.codigo AND
+      A.valor_bolsa < 2000;
 
 
-
+-- dúvida
 -- Questão 8
 -- Liste os departamentos que são gerenciados por professores que nasceram em 1990 e orientam mais de um aluno de mestrado
 SELECT DISTINCT D.nome
 FROM departamento D, professor P, aluno A
-WHERE P.cod_departamento = D.codigo AND
-      P.dt_nasc >= TO_DATE('1990-01-01','YYYY/MM/DD') AND
-      P.dt_nasc < TO_DATE('1991-01-01','YYYY/MM/DD')
+WHERE LOWER(A.nivel) = '%mestrado%' AND
+      A.mat_professor = P.matricula
+      P.cod_departamento = D.codigo AND
+      P.dt_nasc BETWEEN '01-01-1990' AND '12-31-1990';
       -- ORIENTAM MAIS DE UM ALUNO DE MESTRADO
 
 
+-- falta fzr
 -- Questão 9
---Qual publicação possui mais alunos como autores?
+-- Qual publicação possui mais alunos como autores?
 SELECT P.titulo
-FROM publicacao P, aluno A
+FROM publicacao P, aluno A;
 
 
-
+-- falta fzr
 -- Questão 10
 -- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados da agência, inclua as agências que não financiam nenhum aluno mestrado
 SELECT COUNT(*)
-FROM alunos AL, agencia_financiadora AF
+FROM alunos AL, agencia_financiadora AF;
 
 
-
-
+-- falta testar
 -- Questão 11
 -- Quais os alunos de doutorado que participaram de alguma publicação em 2012?
-SELECT A.*
-FROM aluno A, publicacao P, aluno_publicacao AP
+SELECT A.matricula, A.nome
+FROM aluno_publicacao AP, aluno A, publicacao P
 WHERE LOWER(A.nivel) LIKE '%doutorado%' AND 
       AP.mat_aluno = A.matricula AND
       AP.cod_publicacao = P.codigo AND
-      P.ano = 2012
+      P.ano = 2012;
 
 
-
+-- falta testar
 -- Questão 12
 -- Liste a quantidade de publicações em 2013 que não tem a participação de nenhum aluno de graduação
 SELECT COUNT(*)
 FROM publicacao P,  aluno_publicacao AP
 WHERE P.ano = 2013 AND
       AP.cod_publicacao = P.codigo AND
-      AP.mat_aluno IS NULL
+      AP.mat_aluno IS NULL;
 
 
-
-
+-- falta testar
 -- Questão 13
 -- Qual a soma dos orçamentos dos projetos que encerraram em 2008
 SELECT SUM(orcamento)
 FROM projeto
-WHERE dt_fim >= TO_DATE('2008-01-01','YYYY/MM/DD') AND
-      dt_fim < TO_DATE('2009-01-01','YYYY/MM/DD')
+WHERE dt_fim BETWEEN '01-01-2008' AND '12-31-2008';
 
 
-
+-- OK
 -- Questão 14
 -- Liste o nível e o nome dos alunos que participaram de publicações depois de 2006
-SELECT A.nivel, A.nome 
-FROM aluno A, publicacao P, aluno_publicacao AP
+SELECT DISTINCT A.nome, A.nivel 
+FROM aluno_publicacao AP, aluno A, publicacao P
 WHERE AP.mat_aluno = A.matricula AND
       AP.cod_publicacao = P.codigo AND 
-      P.ano > 2006
+      P.ano > 2006;
 
 
-
+-- falta testar
 -- Questão 15
--- Crie um trigger para toda vez que uma nova patente for inserida, incremente a coluna premiação (que deve ser colocada com valor ZERO para cada projeto cadastrado) na tabela de projetos
+-- Crie um trigger para toda vez que uma nova patente for inserida, incremente a coluna 
+-- premiação (que deve ser colocada com valor ZERO para cada projeto cadastrado) na tabela de projetos
 CREATE or REPLACE TRIGGER premiacao_after_insert
 AFTER INSERT
 	ON projeto
@@ -179,6 +177,7 @@ BEGIN
 END;
 
 
+-- falta testar
 -- Questão 16
 -- Crie um trigger que não permita a atualização da descrição de uma patente
 CREATE or REPLACE TRIGGER not_update		
