@@ -1,15 +1,15 @@
--- Banco de Dados I - Projeto parte 3 
+-- Projeto de Banco de Dados I
 -- Consultas SQL 
 -- GRUPO: Gabryelle Soares
 --        Larissa Gabriela
 --        Yally Galdino
 
  
--- ok - 1, 3, 4, 5, 6, 7, 14
+-- ok - 1, 3, 4, 5, 6, 7, 11, 14
 -- dúvida - 2 (listar por linha de pesquisa)
 --          8 (orienta mais de um)
 -- falta fzr - 9, 10
--- falta testar - 11, 12, 13, 15, 16
+-- falta testar - 12, 13, 15, 16
 
 
 -- OK
@@ -104,17 +104,18 @@ WHERE LOWER(A.nivel) = '%mestrado%' AND
 -- Questão 9
 -- Qual publicação possui mais alunos como autores?
 SELECT P.titulo
-FROM publicacao P, aluno A;
+FROM publicacao P
+WHERE ();
 
 
--- falta fzr
+-- AINDA TA ERRADINHA
 -- Questão 10
 -- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados da agência, inclua as agências que não financiam nenhum aluno mestrado
-SELECT COUNT(*)
-FROM alunos AL, agencia_financiadora AF;
+SELECT DISTINCT AF.*, (SELECT COUNT(*) FROM agencia_financiadora AF, aluno A WHERE LOWER(A.nivel) LIKE '%mestrado%' AND A.cod_agencia = AF.codigo) AS alunos_mestrado
+FROM agencia_financiadora AF, aluno A;
 
 
--- falta testar
+-- OK
 -- Questão 11
 -- Quais os alunos de doutorado que participaram de alguma publicação em 2012?
 SELECT A.matricula, A.nome

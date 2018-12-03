@@ -81,5 +81,12 @@ INSERT INTO aluno_publicacao VALUES (1001, 1001);
 INSERT INTO aluno_publicacao VALUES (1002, 2002);
 INSERT INTO aluno_publicacao VALUES (1003, 2002);
 INSERT INTO aluno_publicacao VALUES (1006, 2002);
+INSERT INTO aluno_publicacao VALUES (1002, 3003);
+INSERT INTO aluno_publicacao VALUES (1003, 3003);
+
 (SELECT COUNT(*) FROM departamento D, professor P, aluno A WHERE LOWER(A.nivel) = '%mestrado%' AND A.mat_professor = P.matricula) > 1;
  AND 
+
+ SELECT AF.*, COUNT(*)
+FROM agencia_financiadora AF, aluno A
+WHERE (SELECT COUNT(*) FROM agencia_financiadora AF, aluno A WHERE LOWER(A.nivel) LIKE '%mestrado%' AND A.cod_agencia = AF.codigo) >= 0;
