@@ -77,6 +77,8 @@ INSERT INTO publicacao VALUES (2002, 'publicacao 2', 'veiculo 2', 2014, 5, 3);
 INSERT INTO publicacao VALUES (3003, 'publicacao 3', 'veiculo 3', 2012, 6, 3);
 INSERT INTO publicacao VALUES (4004, 'publicacao 4', 'veiculo 4', 2015, 7, 3);
 INSERT INTO publicacao VALUES (5005, 'publicacao 5', 'veiculo 5', 2016, 3, 2);
+INSERT INTO publicacao VALUES (6006, 'publicacao 6', 'veiculo 6', 2013, 3, 2);
+INSERT INTO publicacao VALUES (7007, 'publicacao 7', 'veiculo 7', 2013, 3, 2);
 
 
 INSERT INTO aluno_publicacao VALUES (1001, 1001);
@@ -85,6 +87,9 @@ INSERT INTO aluno_publicacao VALUES (1003, 2002);
 INSERT INTO aluno_publicacao VALUES (1006, 2002);
 INSERT INTO aluno_publicacao VALUES (1002, 3003);
 INSERT INTO aluno_publicacao VALUES (1003, 3003);
+INSERT INTO aluno_publicacao VALUES (1010, 4004);
+INSERT INTO aluno_publicacao VALUES (1009, 7007);
+
 
 (SELECT COUNT(*) FROM departamento D, professor P, aluno A WHERE LOWER(A.nivel) = '%mestrado%' AND A.mat_professor = P.matricula) > 1;
  AND 
@@ -92,3 +97,5 @@ INSERT INTO aluno_publicacao VALUES (1003, 3003);
  SELECT AF.*, COUNT(*)
 FROM agencia_financiadora AF, aluno A
 WHERE (SELECT COUNT(*) FROM agencia_financiadora AF, aluno A WHERE LOWER(A.nivel) LIKE '%mestrado%' AND A.cod_agencia = AF.codigo) >= 0;
+
+

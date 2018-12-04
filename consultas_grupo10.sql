@@ -118,19 +118,18 @@ WHERE P.codigo = C.codPub AND
       GROUP BY P.codigo, P.titulo) = C.count;
 
 
-
 -- ok (testada no apex)
 -- Questão 10
 -- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados da agência, inclua as agências que não financiam nenhum aluno mestrado
-SELECT COUNT(a.cod_agencia) AS quantidade, af.codigo, af.nome, af.email
-FROM aluno a JOIN agencia_financiadora af
-ON a.cod_agencia = af.codigo
-WHERE a.nivel='mestrado'
-GROUP BY a.cod_agencia, af.codigo, af.nome, af.email
+(SELECT COUNT(A.cod_agencia) AS quantidade, AF.codigo, AF.nome, AF.email
+FROM aluno A JOIN agencia_financiadora AF
+ON A.cod_agencia = AF.codigo
+WHERE LOWER(A.nivel) LIKE '%mestrado%'
+GROUP BY A.cod_agencia, AF.codigo, AF.nome, AF.email)
 UNION
-SELECT 0 AS quantidade, af.codigo, af.nome, af.email
-FROM agencia_financiadora af
-WHERE af.codigo <> ALL (SELECT cod_agencia FROM aluno WHERE nivel='mestrado')
+(SELECT 0 AS quantidade, AF.codigo, AF.nome, AF.email
+FROM agencia_financiadora AF
+WHERE AF.codigo <> ALL (SELECT cod_agencia FROM aluno WHERE LOWER(nivel) LIKE '%mestrado%'))
 
 
 -- OK
@@ -144,14 +143,15 @@ WHERE LOWER(A.nivel) LIKE '%doutorado%' AND
       P.ano = 2012;
 
 
--- falta testar
+-- +/-
 -- Questão 12
 -- Liste a quantidade de publicações em 2013 que não tem a participação de nenhum aluno de graduação
 SELECT COUNT(*)
-FROM publicacao P,  aluno_publicacao AP
+FROM aluno_publicacao AP, aluno A, publicacao P
 WHERE P.ano = 2013 AND
       AP.cod_publicacao = P.codigo AND
-      AP.mat_aluno IS NULL;
+      AP.mat_aluno = A.matricula AND
+       NOT LOWER(A.nivel) LIKE '%graduacao%';
 
 
 -- falta testar
