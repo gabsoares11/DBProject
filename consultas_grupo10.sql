@@ -7,9 +7,9 @@
  
 -- ok - 1, 3, 4, 5, 6, 7, 11, 14
 -- dúvida - 2 (listar por linha de pesquisa)
---          8 (orienta mais de um)
--- falta fzr - 9, 10
--- falta testar - 12, 13, 15, 16
+--        
+-- falta fzr - 9(feita,mas precisa olhar se esta certa)
+-- falta testar - 8,12, 13, 15, 16
 
 
 -- OK
@@ -88,31 +88,46 @@ WHERE LOWER(A.nivel) LIKE '%mestrado%' AND
       A.valor_bolsa < 2000;
 
 
--- dúvida
+-- ok(testado no apex)
 -- Questão 8
 -- Liste os departamentos que são gerenciados por professores que nasceram em 1990 e orientam mais de um aluno de mestrado
-SELECT DISTINCT D.nome
-FROM departamento D, professor P, aluno A
-WHERE LOWER(A.nivel) = '%mestrado%' AND
-      A.mat_professor = P.matricula
-      P.cod_departamento = D.codigo AND
-      P.dt_nasc BETWEEN '01-01-1990' AND '12-31-1990';
-      -- ORIENTAM MAIS DE UM ALUNO DE MESTRADO
+
+SELECT DISTINCT d.nome
+FROM departamento d, professor p, aluno a
+WHERE d.codigo=p.cod_departamento AND 
+a.mat_professor=p.matricula AND 
+EXTRACT(year FROM p.dt_nasc)>1990 AND 
+a.nivel='mestrado'
 
 
--- falta fzr
+-- Passou no APEX,mas verificar a logica 
 -- Questão 9
--- Qual publicação possui mais alunos como autores?
-SELECT P.titulo
-FROM publicacao P
-WHERE ();
+-- Qual publicação possui mais alunos como autores?;
+
+SELECT cod_publicacao
+FROM aluno_publicacao
+WHERE cod_publicacao in (SELECT cod_publicacao
+                   FROM aluno
+                   GROUP BY cod_publicacao
+                   HAVING COUNT(*) >= ALL
+                                     (SELECT COUNT(*)
+                                      FROM aluno
+                                      GROUP BY cod_publicacao))
 
 
--- AINDA TA ERRADINHA
+
+-- ok (testada no apex)
 -- Questão 10
 -- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados da agência, inclua as agências que não financiam nenhum aluno mestrado
-SELECT DISTINCT AF.*, (SELECT COUNT(*) FROM agencia_financiadora AF, aluno A WHERE LOWER(A.nivel) LIKE '%mestrado%' AND A.cod_agencia = AF.codigo) AS alunos_mestrado
-FROM agencia_financiadora AF, aluno A;
+SELECT COUNT(a.cod_agencia) AS quantidade, af.codigo, af.nome, af.email
+FROM aluno a JOIN agencia_financiadora af
+ON a.cod_agencia = af.codigo
+WHERE a.nivel='mestrado'
+GROUP BY a.cod_agencia, af.codigo, af.nome, af.email
+UNION
+SELECT 0 AS quantidade, af.codigo, af.nome, af.email
+FROM agencia_financiadora af
+WHERE af.codigo <> ALL (SELECT cod_agencia FROM aluno WHERE nivel='mestrado')
 
 
 -- OK
