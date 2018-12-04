@@ -23,7 +23,7 @@ CREATE VIEW Agencias AS
         P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';
 
 
--- dúvida
+-- FALTA AJEITAR 
 -- Questão 2
 -- Liste a quantidade de alunos de doutorado que possuem bolsa, por Linha de Pesquisa
 SELECT COUNT(*)
@@ -88,31 +88,34 @@ WHERE LOWER(A.nivel) LIKE '%mestrado%' AND
       A.valor_bolsa < 2000;
 
 
--- ok(testado no apex)
+-- OK
 -- Questão 8
 -- Liste os departamentos que são gerenciados por professores que nasceram em 1990 e orientam mais de um aluno de mestrado
+SELECT D.nome, P.nome
+FROM departamento D, professor P
+WHERE D.mat_professor = P.matricula AND 
+      EXTRACT(year FROM P.dt_nasc) = 1990 AND 
+      (SELECT COUNT(*) 
+      FROM aluno A, professor P 
+      WHERE p.matricula = A.mat_professor AND 
+           LOWER(A.nivel) LIKE '%mestrado%') > 1;
 
-SELECT DISTINCT d.nome
-FROM departamento d, professor p, aluno a
-WHERE d.codigo=p.cod_departamento AND 
-a.mat_professor=p.matricula AND 
-EXTRACT(year FROM p.dt_nasc)>1990 AND 
-a.nivel='mestrado'
 
-
--- Passou no APEX,mas verificar a logica 
+-- OK 
 -- Questão 9
 -- Qual publicação possui mais alunos como autores?;
-
-SELECT cod_publicacao
-FROM aluno_publicacao
-WHERE cod_publicacao in (SELECT cod_publicacao
-                   FROM aluno
-                   GROUP BY cod_publicacao
-                   HAVING COUNT(*) >= ALL
-                                     (SELECT COUNT(*)
-                                      FROM aluno
-                                      GROUP BY cod_publicacao))
+SELECT P.codigo, P.titulo
+FROM (SELECT P.codigo AS codPub, COUNT(*) AS count
+      FROM aluno_publicacao AP, publicacao P, aluno A
+      WHERE P.codigo = AP.cod_publicacao AND 
+            A.matricula = AP.mat_aluno
+      GROUP BY P.codigo, P.titulo) C, publicacao P
+WHERE P.codigo = C.codPub AND 
+     (SELECT MAX(COUNT(*))
+      FROM aluno_publicacao AP, publicacao P, aluno A
+      WHERE P.codigo = AP.cod_publicacao AND 
+            A.matricula = AP.mat_aluno
+      GROUP BY P.codigo, P.titulo) = C.count;
 
 
 

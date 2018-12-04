@@ -60,6 +60,8 @@ INSERT INTO aluno VALUES (1005, 'aluno 5', 'doutorado', 1, 1, 101, 201, '12-05-1
 INSERT INTO aluno VALUES (1006, 'aluno 6', 'graduação', 2, 2, 102, 202, '11-30-1988', 200, NULL, '07-01-2008', NULL, 15);
 INSERT INTO aluno VALUES (1007, 'aluno 7', 'mestrado', 4, NULL, NULL, NULL, '10-27-1994', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO aluno VALUES (1008, 'aluno 8', 'mestrado', 5, NULL, NULL, NULL, '08-09-1999', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO aluno VALUES (1009, 'aluno 9', 'mestrado', 5, NULL, NULL, NULL, '08-15-1997', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO aluno VALUES (1010, 'aluno 10', 'mestrado', 4, NULL, NULL, NULL, '02-09-1997', NULL, NULL, NULL, NULL, NULL);
 
 
 INSERT INTO laboratorio VALUES (1100, 'laboratorio 1', 'local do lab 1', 1);
