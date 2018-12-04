@@ -193,23 +193,15 @@ BEGIN
 END;
 
 
--- falta testar
+-- TA ERRADA
 -- Questão 16
 -- Crie um trigger que não permita a atualização da descrição de uma patente
-CREATE or REPLACE TRIGGER not_update		
- BEFORE INSERT OR UPDATE		
- 	ON PETENTE		
- 	FOR EACH ROW		
-   WHEN(descricao)		
- DECLARE		
- BEGIN		
-   IF :new.dt_inicio > :new.dt_fim		
-      Then		
-        RAISE_APPLICATION_ERROR(-20001,'DT_INICIO INVALIDO');		
-   END IF;		
- END;  
-
-
-SELECT AF.nome
-FROM agencia_financiadora AF, agencia_projeto AP, projeto P
-WHERE AP.cod_agencia = AF.codigo AND AP.cod_projeto = P.codigo AND P.dt_inicio BETWEEN '01-01-2007' AND '12-31-2015';
+CREATE  or  REPLACE TRIGGER N_UPDATE
+BEFORE INSERT OR UPDATE
+	ON PATENTE
+	
+	IF UPDATE descricao	
+     Then
+       RAISE_APPLICATION_ERROR('NAO PODE ATUALIZAR');
+  END IF;
+END;  
