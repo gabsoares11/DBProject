@@ -5,11 +5,10 @@
 --        Yally Galdino
 
  
--- ok - 1, 3, 4, 5, 6, 7, 11, 14
--- dúvida - 2 (listar por linha de pesquisa)
---        
--- falta fzr - 9(feita,mas precisa olhar se esta certa)
--- falta testar - 8,12, 13, 15, 16
+-- ok : 1, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14
+-- dúvida : 2 (listar por linha de pesquisa)
+-- +/- : 12
+-- falta testar : 10, 15, 16
 
 
 -- OK
@@ -118,18 +117,14 @@ WHERE P.codigo = C.codPub AND
       GROUP BY P.codigo, P.titulo) = C.count;
 
 
--- ok (testada no apex)
+-- OK(?)
 -- Questão 10
--- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados da agência, inclua as agências que não financiam nenhum aluno mestrado
-(SELECT COUNT(A.cod_agencia) AS quantidade, AF.codigo, AF.nome, AF.email
+-- Liste a quantidade de alunos de mestrado financiados por agência financiadora, exiba todos os dados 
+-- da agência, inclua as agências que não financiam nenhum aluno mestrado
+SELECT AF.codigo, AF.nome, AF.email, AF.endereco, (SELECT COUNT(*) FROM agencia_financiadora AF, aluno A WHERE A.cod_agencia = AF.codigo AND LOWER(A.nivel) LIKE '%mestrado%') as alunos_mestrado
 FROM aluno A JOIN agencia_financiadora AF
 ON A.cod_agencia = AF.codigo
-WHERE LOWER(A.nivel) LIKE '%mestrado%'
-GROUP BY A.cod_agencia, AF.codigo, AF.nome, AF.email)
-UNION
-(SELECT 0 AS quantidade, AF.codigo, AF.nome, AF.email
-FROM agencia_financiadora AF
-WHERE AF.codigo <> ALL (SELECT cod_agencia FROM aluno WHERE LOWER(nivel) LIKE '%mestrado%'))
+GROUP BY A.cod_agencia, AF.codigo, AF.nome, AF.email, AF.endereco
 
 
 -- OK
@@ -151,10 +146,11 @@ FROM aluno_publicacao AP, aluno A, publicacao P
 WHERE P.ano = 2013 AND
       AP.cod_publicacao = P.codigo AND
       AP.mat_aluno = A.matricula AND
-       NOT LOWER(A.nivel) LIKE '%graduacao%';
+      (LOWER(A.nivel) LIKE '%mestrado%' OR 
+       LOWER(A.nivel) LIKE '%doutorado%');
 
 
--- falta testar
+-- OK
 -- Questão 13
 -- Qual a soma dos orçamentos dos projetos que encerraram em 2008
 SELECT SUM(orcamento)
@@ -177,9 +173,8 @@ WHERE AP.mat_aluno = A.matricula AND
 -- Crie um trigger para toda vez que uma nova patente for inserida, incremente a coluna 
 -- premiação (que deve ser colocada com valor ZERO para cada projeto cadastrado) na tabela de projetos
 CREATE or REPLACE TRIGGER premiacao_after_insert
-AFTER INSERT
-	ON projeto
-	FOR EACH ROW
+AFTER INSERT ON patente 
+FOR EACH ROW
 DECLARE
 	premios int;
 
@@ -191,7 +186,7 @@ BEGIN
 	GROUP BY PAT.cod_projeto;
 
 	-- Modifica o valor de
-  UPDATE projeto SET premiacao = premios;
+  UPDATE projeto SET premiacao = premiacao + 1;
 
 END;
 

@@ -32,6 +32,8 @@ INSERT INTO projeto VALUES (6, 3, 550000.00, 'projeto 6', 'descricao do projeto 
 INSERT INTO projeto VALUES (7, 3, 550000.00, 'projeto 7', 'descricao do projeto 7', '08-13-2014', NULL, 1);
 INSERT INTO projeto VALUES (8, 2, 780000.00, 'projeto 8', 'descricao do projeto 8', '02-20-2012', '07-30-2017', 2);
 INSERT INTO projeto VALUES (9, 1, 685000.00, 'projeto 9', 'descricao do projeto 9', '07-05-2013', '05-12-2018', 2);
+INSERT INTO projeto VALUES (10, 1, 700000.00, 'projeto 10', 'descricao do projeto 10', '11-03-2007', '07-08-2008', 1);
+INSERT INTO projeto VALUES (11, 1, 300000.00, 'projeto 11', 'descricao do projeto 11', '07-16-2005', '01-30-2008', 1);
 
 
 INSERT INTO agencia_projeto VALUES (100, 1);
@@ -79,6 +81,7 @@ INSERT INTO publicacao VALUES (4004, 'publicacao 4', 'veiculo 4', 2015, 7, 3);
 INSERT INTO publicacao VALUES (5005, 'publicacao 5', 'veiculo 5', 2016, 3, 2);
 INSERT INTO publicacao VALUES (6006, 'publicacao 6', 'veiculo 6', 2013, 3, 2);
 INSERT INTO publicacao VALUES (7007, 'publicacao 7', 'veiculo 7', 2013, 3, 2);
+INSERT INTO publicacao VALUES (8008, 'publicacao 8', 'veiculo 8', 2013, 5, 3);
 
 
 INSERT INTO aluno_publicacao VALUES (1001, 1001);
@@ -89,6 +92,20 @@ INSERT INTO aluno_publicacao VALUES (1002, 3003);
 INSERT INTO aluno_publicacao VALUES (1003, 3003);
 INSERT INTO aluno_publicacao VALUES (1010, 4004);
 INSERT INTO aluno_publicacao VALUES (1009, 7007);
+INSERT INTO aluno_publicacao VALUES (1006, 7007);
+INSERT INTO aluno_publicacao VALUES (1001, 6006);
+INSERT INTO aluno_publicacao VALUES (1006, 8008);
+
+
+SELECT COUNT(DISTINCT P.titulo), P.titulo
+FROM aluno_publicacao AP, aluno A, publicacao P
+WHERE P.ano = 2013 AND
+      AP.cod_publicacao = P.codigo AND
+      AP.mat_aluno = A.matricula AND
+      LOWER(A.nivel) LIKE '%gradua%'
+GROUP BY P.titulo;
+
+
 
 
 (SELECT COUNT(*) FROM departamento D, professor P, aluno A WHERE LOWER(A.nivel) = '%mestrado%' AND A.mat_professor = P.matricula) > 1;
